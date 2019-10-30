@@ -1,0 +1,21 @@
+{{- if .Values.master.gateway.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{template "jenkins.fullname" . }}-istio-vs
+  namespace: {{ template "jenkins.namespace" . }}
+spec:
+  hosts:
+    - cicdqa.mrhecloud.com
+  gateways:
+    - global-gateway.istio-system.svc.cluster.local
+  http:
+  - match:
+    - uri:
+        prefix: /jenkins
+    route:
+    - destination:
+        host: jenkins
+        port:
+          number: 80
+{{- end }}
